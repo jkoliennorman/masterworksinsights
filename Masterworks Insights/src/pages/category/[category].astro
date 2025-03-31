@@ -1,0 +1,99 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const categories = [
+    "MARKET INSIGHTS",
+    "INVESTING 101", 
+    "MARKET ANALYSIS",
+    "ARTIST SPOTLIGHT",
+    "PORTFOLIO NEWS",
+    "APPRAISALS",
+    "CASE STUDIES",
+    "INSIDE MASTERWORKS"
+  ];
+
+  return categories.map(category => ({
+    params: { category: category.toLowerCase().replace(/ /g, '-') },
+    props: { category }
+  }));
+}
+
+const { category } = Astro.props;
+
+const posts = [
+  {
+    title: "What Drives the Price of a Painting? An Insider's Guide",
+    description: "Explore the key factors that influence art valuations and market prices. From artist reputation to provenance, understand what makes certain artworks more valuable than others.",
+    publishDate: "March 15, 2024",
+    readingTime: "7 min read",
+    slug: "what-drives-painting-prices",
+    image: "https://images.unsplash.com/photo-1578321272128-a6a0e0e9a2a2?q=80&w=2070&auto=format&fit=crop",
+    category: "MARKET INSIGHTS"
+  },
+  {
+    title: "How Art Performs During a Recession",
+    description: "An analysis of art market performance during economic downturns, with historical data and insights for investors.",
+    publishDate: "March 14, 2024",
+    readingTime: "6 min read",
+    slug: "art-performance-during-recession",
+    image: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?q=80&w=2069&auto=format&fit=crop",
+    category: "MARKET ANALYSIS"
+  }
+].filter(post => post.category === category);
+---
+
+<BlogLayout
+  title={category}
+  description={`Latest articles and insights about ${category.toLowerCase()}`}
+  publishDate=""
+  readingTime=""
+>
+  <div class="max-w-4xl">
+    <header class="mb-16">
+      <h1 class="text-4xl font-normal text-gray-900 mb-4">{category}</h1>
+      <p class="text-xl text-gray-600">Latest articles and insights about {category.toLowerCase()}</p>
+    </header>
+
+    <div class="space-y-16">
+      {posts.map(post => (
+        <article>
+          <a href={`/blog/${post.slug}`} class="group">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+              <div class="lg:col-span-5">
+                <div class="aspect-[4/3] overflow-hidden rounded-xl">
+                  <img
+                    src={post.image}
+                    alt=""
+                    class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+              <div class="lg:col-span-7">
+                <span class="text-sm font-medium text-purple mb-4 block">{post.category}</span>
+                <div class="flex items-center text-sm text-gray-500 mb-4">
+                  <time>{post.publishDate}</time>
+                  <span class="mx-2">•</span>
+                  <span>{post.readingTime}</span>
+                </div>
+                <h2 class="text-2xl leading-tight font-normal text-gray-900 group-hover:text-purple mb-6 transition-colors">
+                  {post.title}
+                </h2>
+                <p class="text-gray-600 text-lg leading-relaxed mb-8">
+                  {post.description}
+                </p>
+                <span class="inline-flex items-center text-purple font-medium group-hover:underline">
+                  READ ARTICLE
+                  <svg class="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.75 6.75L19.25 12L13.75 17.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M19 12H4.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</BlogLayout>

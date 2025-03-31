@@ -1,0 +1,283 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { allPosts, featuredTabs, categories } from '../../data/blog';
+---
+
+<BlogLayout
+  title="Latest Insights"
+  description="Expert analysis and insights on art market trends, investment opportunities, and portfolio performance."
+  publishDate=""
+  readingTime=""
+>
+  <!-- Featured Tabs Section -->
+  <section class="mb-32">
+    <div class="flex items-center justify-between mb-12">
+      <div class="flex items-center space-x-8" id="featured-tabs">
+        {featuredTabs.map((tab, index) => (
+          <button
+            class:list={[
+              "text-sm font-medium pb-2 border-b-2 transition-colors",
+              index === 0 ? "text-gray-900 border-gray-900" : "text-gray-400 border-transparent hover:text-gray-600"
+            ]}
+            data-tab={tab.id}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      <div class="flex items-center space-x-2">
+        <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors" id="prev-tab">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors" id="next-tab">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="relative">
+      {featuredTabs.map((tab, index) => (
+        <div
+          class:list={[
+            "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8",
+            index === 0 ? "opacity-100 visible" : "opacity-0 invisible absolute top-0 left-0 right-0"
+          ]}
+          data-content={tab.id}
+        >
+          {tab.posts.map(post => (
+            <a href={`/blog/${post.slug}`} class="group">
+              <div class="aspect-[4/3] overflow-hidden rounded-lg mb-5">
+                <img
+                  src={post.image}
+                  alt=""
+                  class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <span class="text-sm font-medium text-purple mb-3 block">{post.category}</span>
+              <h3 class="text-lg text-gray-900 group-hover:text-purple transition-colors leading-snug line-clamp-2">
+                {post.title}
+              </h3>
+              {post.author && (
+                <div class="flex items-center mt-4">
+                  <img 
+                    src={post.author.image} 
+                    alt={post.author.name}
+                    class="w-6 h-6 rounded-full object-cover mr-2"
+                  />
+                  <span class="text-sm text-gray-600">{post.author.name}</span>
+                </div>
+              )}
+            </a>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <div class="grid grid-cols-12 gap-8 lg:gap-16">
+    <!-- Categories -->
+    <aside class="col-span-12 lg:col-span-2">
+      <div class="sticky top-36">
+        <h2 class="text-sm font-medium text-gray-900 mb-6">CATEGORIES</h2>
+        <nav class="space-y-3" id="category-filter">
+          {categories.map(category => (
+            <button
+              class:list={[
+                "block text-sm w-full text-left transition-colors",
+                category === "ALL" ? "text-gray-900 font-medium" : "text-gray-600 hover:text-purple"
+              ]}
+              data-category={category}
+            >
+              {category}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="col-span-12 lg:col-span-10">
+      <!-- Latest Posts -->
+      <section>
+        <h2 class="text-sm font-medium text-gray-900 mb-12" id="posts-heading">LATEST STORIES</h2>
+        <div class="space-y-16" id="posts-container">
+          {allPosts.map(post => (
+            <article data-category={post.category}>
+              <a href={`/blog/${post.slug}`} class="group">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                  <div class="lg:col-span-5">
+                    <div class="aspect-[4/3] overflow-hidden rounded-xl">
+                      <img
+                        src={post.image}
+                        alt=""
+                        class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                  </div>
+                  <div class="lg:col-span-7">
+                    <span class="text-sm font-medium text-purple mb-4 block">{post.category}</span>
+                    <div class="flex items-center space-x-4 mb-4">
+                      {post.author && (
+                        <div class="flex items-center">
+                          <img 
+                            src={post.author.image} 
+                            alt={post.author.name}
+                            class="w-8 h-8 rounded-full object-cover mr-2"
+                          />
+                          <span class="text-sm text-gray-900 font-medium">{post.author.name}</span>
+                        </div>
+                      )}
+                      <div class="flex items-center text-sm text-gray-500">
+                        <time>{post.publishDate}</time>
+                        <span class="mx-2">•</span>
+                        <span>{post.readingTime}</span>
+                      </div>
+                    </div>
+                    <h2 class="text-2xl leading-tight font-normal text-gray-900 group-hover:text-purple mb-6 transition-colors">
+                      {post.title}
+                    </h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-8">
+                      {post.description}
+                    </p>
+                    <span class="inline-flex items-center text-purple font-medium group-hover:underline">
+                      READ ARTICLE
+                      <svg class="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.75 6.75L19.25 12L13.75 17.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M19 12H4.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  </div>
+</BlogLayout>
+
+<script>
+  let currentTabIndex = 0;
+  const tabs = document.querySelectorAll('[data-tab]');
+  const contents = document.querySelectorAll('[data-content]');
+  const prevButton = document.getElementById('prev-tab');
+  const nextButton = document.getElementById('next-tab');
+  let autoRotateInterval: number;
+
+  function showTab(index: number) {
+    tabs.forEach((tab, i) => {
+      if (i === index) {
+        tab.classList.add('text-gray-900', 'border-gray-900');
+        tab.classList.remove('text-gray-400', 'border-transparent');
+      } else {
+        tab.classList.remove('text-gray-900', 'border-gray-900');
+        tab.classList.add('text-gray-400', 'border-transparent');
+      }
+    });
+
+    contents.forEach((content, i) => {
+      if (i === index) {
+        content.classList.remove('opacity-0', 'invisible');
+      } else {
+        content.classList.add('opacity-0', 'invisible');
+      }
+    });
+
+    currentTabIndex = index;
+  }
+
+  function nextTab() {
+    showTab((currentTabIndex + 1) % tabs.length);
+  }
+
+  function prevTab() {
+    showTab((currentTabIndex - 1 + tabs.length) % tabs.length);
+  }
+
+  // Initialize tab rotation
+  function startAutoRotate() {
+    autoRotateInterval = setInterval(nextTab, 5000);
+  }
+
+  function stopAutoRotate() {
+    clearInterval(autoRotateInterval);
+  }
+
+  // Event listeners
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+      showTab(index);
+      stopAutoRotate();
+      startAutoRotate();
+    });
+  });
+
+  prevButton?.addEventListener('click', () => {
+    prevTab();
+    stopAutoRotate();
+    startAutoRotate();
+  });
+
+  nextButton?.addEventListener('click', () => {
+    nextTab();
+    stopAutoRotate();
+    startAutoRotate();
+  });
+
+  // Start auto-rotation
+  startAutoRotate();
+
+  // Pause rotation when hovering over tabs
+  const tabsContainer = document.getElementById('featured-tabs');
+  tabsContainer?.addEventListener('mouseenter', stopAutoRotate);
+  tabsContainer?.addEventListener('mouseleave', startAutoRotate);
+
+  // Category filtering
+  const categoryButtons = document.querySelectorAll('#category-filter button');
+  const postsContainer = document.getElementById('posts-container');
+  const postsHeading = document.getElementById('posts-heading');
+  let currentCategory = 'ALL';
+
+  function filterPosts(category: string) {
+    currentCategory = category;
+    
+    // Update button styles
+    categoryButtons.forEach(button => {
+      if (button.getAttribute('data-category') === category) {
+        button.classList.add('text-gray-900', 'font-medium');
+        button.classList.remove('text-gray-600');
+      } else {
+        button.classList.remove('text-gray-900', 'font-medium');
+        button.classList.add('text-gray-600');
+      }
+    });
+
+    // Update posts heading
+    if (postsHeading) {
+      postsHeading.textContent = category === 'ALL' ? 'LATEST STORIES' : category;
+    }
+
+    // Filter posts
+    const posts = postsContainer?.querySelectorAll('article');
+    posts?.forEach(post => {
+      const postCategory = post.getAttribute('data-category');
+      if (category === 'ALL' || postCategory === category) {
+        post.style.display = 'block';
+      } else {
+        post.style.display = 'none';
+      }
+    });
+  }
+
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.getAttribute('data-category') || 'ALL';
+      filterPosts(category);
+    });
+  });
+</script>
